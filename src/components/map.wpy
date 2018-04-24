@@ -1,19 +1,130 @@
 <style lang="less">
+  .lv-map-box{
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+  }
+
   .lv-map{
     width: 100%;
-    height: 50vh;
+    flex:1;
 
     map{
       width: 100%;
       height: 100%;
     }
   }
+
+  .lv-marker{
+    height: 12vh;
+    border-top: 1px solid #ccc;
+    display: flex;
+
+    .title{
+      font-size: 36rpx;
+
+    }
+
+    .mes{
+      font-size: 22rpx;
+    }
+
+  
+  }
+
+  .lv-marker-img{
+    width: 70rpx;
+    padding: 35rpx 0;
+    padding-left: 20rpx;
+
+    image{
+      width: 100%;
+      height: 100%;
+      
+    }
+  }
+
+  .lv-marker-mes{
+    flex: 1;
+    padding: 10rpx 20rpx;
+
+    .title{
+      color: #e24a5c;
+      line-height: 35rpx;
+      height: 35rpx;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+      margin-top: 4rpx;
+      margin-bottom: 10rpx;
+    }
+    .mes{
+      color: #999;
+      line-height: 30rpx;
+    }
+  }
+
+  .lv-marker-go{
+    width: 65rpx;
+    
+  }
+
+  .lv-go{
+    position: relative;
+
+    &::after{
+      content: '';
+      position: absolute;
+      width: 30rpx;
+      height: 30rpx;
+      border-top: 1px solid #333;
+      border-right: 1px solid #333;
+      top: 50%;
+      left: 50%;
+      transform: translate(-15rpx,-15rpx) rotate(45deg);
+    }
+
+  
+
+  }
+
+  .lv-marker-nothing{
+    height: 12vh;
+    text-align: center;
+    font-size: 30rpx;
+    color: #e24a5c;
+
+    view{
+      margin-top: 50rpx;
+    }
+  }
+
 </style>
 <template>
-  <view class="lv-map"> 
-    <map longitude="{{mapmes.longitude}}" latitude="{{mapmes.latitude}}"  show-location='{{mapmes.location}}' scale='{{mapmes.scale}}' controls='{{mapmes.controls}}'>
-
-    </map>
+  <view class="lv-map-box"> 
+    <view class="lv-map">
+      <map markers="{{mapmarks}}" longitude="{{mapmes.longitude}}" latitude="{{mapmes.latitude}}"  show-location='{{mapmes.location}}' scale='{{mapmes.scale}}' controls='{{mapmes.controls}}' bindmarkertap="clickmark">
+      </map>
+    </view>
+    <view class="lv-marker" wx:if="{{mark}}" @tap="routo">
+        <view class="lv-marker-img">
+          <image src="../public/icon-mark.png"></image>
+        </view>
+        <view class="lv-marker-mes">
+          <view class="title">
+            {{mark.title}}
+          </view>
+          <view class="mes">
+            {{mark.address}}
+          </view>
+        </view>
+        <view class="lv-marker-go lv-go"></view>
+    </view>
+    <view class="lv-marker-nothing" wx:else>
+      <view>
+        请在地图上点击您想要去往的加油站!!!
+      </view>
+    </view>
   </view>
 </template>
 
@@ -23,17 +134,90 @@
   export default class Com extends wepy.component {
     components = {};
 
+ 
     data = {
       mapmes: {
           longitude: null,
           latitude: null,
-          scale: 15,
+          scale: 11,
           controls: true,
           location: true
+      },
+      mark: null,
+      mapmarks: [
+        {
+          id: 1,
+          latitude: 40.22077,
+          longitude: 116.23128,
+          title: '祁家豁子',
+          iconPath: '../public/icon-mark1.png',
+          width: 30,
+          height: 30,
+          address: '长途汽车站的描述性文字长途汽车站的描述性文字长途汽车站的描述性文字长途汽车站的描述性文字',
+          callout: {
+            content: '祁家豁子-加油站',
+            color: '#fff',
+            fontSize: 12,
+            padding: 5,
+            borderRadius: 5,
+            bgColor: '#e24a5c',
+            display: 'BYCLICK'
+          }
+        },
+        {
+          id: 12,
+          latitude: 40.12077,
+          longitude: 116.13128,
+          title: '中博教育',
+          iconPath: '../public/icon-mark1.png',
+          width: 30,
+          height: 30,
+          address: '123123123123123123',
+          callout: {
+            content: '中博教育-加油站',
+            color: '#fff',
+            fontSize: 12,
+            padding: 5,
+            borderRadius: 5,
+            bgColor: '#e24a5c',
+            display: 'BYCLICK'
+          }
+        }
+      ]
+    };
+
+    methods = {
+      //点击信息导航 跳入微信地图导航页面
+      routo(){
+          let mk = this.mark
+          wx.openLocation({
+              latitude: mk.latitude,
+              longitude: mk.longitude,
+              name: mk.title,
+              address:  mk.callout.content,
+              success: function(){
+
+              }
+          })
+      },
+      clickmark(res){
+        // 点击mark弹出响应的信息，并赋值当前mark的信息到mark 数据中
+        let _this = this
+        _this.getThisMark(res.markerId,function(mk){
+          _this.mark = mk
+          _this.$apply()
+        })
       }
     };
 
-    methods = {};
+  
+
+    getThisMark(id,res){
+      let marks = this.mapmarks
+      for(let one of marks){
+        one.id == id && res(one)
+      }
+    };
 
     onLoad(){
       let _this = this

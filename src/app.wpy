@@ -14,9 +14,10 @@ export default class extends wepy.app {
       'pages/index'
     ],
     window: {
+      'navigationStyle': 'custom',
       'navigationBarBackgroundColor': '#e24a5c',
       'navigationBarTitleText': '微信小程序测试版',
-      'navigationBarTextStyle': 'white',
+      'navigationBarTextStyle': 'black',
       'backgroundColor': '#e24a5c',
       'backgroundColorTop': '#e24a5c',
       'backgroundColorBottom': '#e24a5c'
