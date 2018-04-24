@@ -1,0 +1,46 @@
+<style lang="less">
+ .lv-box{
+   background: #fff;
+ } 
+</style>
+<template>
+  <view class="lv-box">
+    <map></map>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Map from '../components/map'
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '测试版微信小程序'
+    }
+    components = {
+        map: Map
+    }
+
+    mixins = []
+
+    data = {
+     
+    }
+
+    computed = {
+     
+    }
+
+    methods = {
+     
+    }
+
+    events = {
+     
+    }
+
+    onLoad() {
+      
+    }
+  }
+</script>

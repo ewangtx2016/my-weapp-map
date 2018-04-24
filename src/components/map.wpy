@@ -1,0 +1,52 @@
+<style lang="less">
+  .lv-map{
+    width: 100%;
+    height: 50vh;
+
+    map{
+      width: 100%;
+      height: 100%;
+    }
+  }
+</style>
+<template>
+  <view class="lv-map"> 
+    <map longitude="{{mapmes.longitude}}" latitude="{{mapmes.latitude}}"  show-location='{{mapmes.location}}' scale='{{mapmes.scale}}' controls='{{mapmes.controls}}'>
+
+    </map>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Com extends wepy.component {
+    components = {};
+
+    data = {
+      mapmes: {
+          longitude: null,
+          latitude: null,
+          scale: 15,
+          controls: true,
+          location: true
+      }
+    };
+
+    methods = {};
+
+    onLoad(){
+      let _this = this
+      wx.getLocation({
+        type: 'wgs84',
+        altitude: true,
+        success: function(res){
+          console.log(res)
+          _this.mapmes.latitude = res.latitude
+          _this.mapmes.longitude = res.longitude
+          _this.$apply()
+        }
+      })
+    }
+}
+</script>

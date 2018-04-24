@@ -1,0 +1,78 @@
+<style lang="less">
+  page{
+    background: #fff;
+  }
+</style>
+
+<script>
+import wepy from 'wepy'
+
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index'
+    ],
+    window: {
+      'navigationBarBackgroundColor': '#e24a5c',
+      'navigationBarTitleText': '微信小程序测试版',
+      'navigationBarTextStyle': 'white',
+      'backgroundColor': '#e24a5c',
+      'backgroundColorTop': '#e24a5c',
+      'backgroundColorBottom': '#e24a5c'
+    },
+    tabBar: {
+      'color': '#000',
+      'selectedColor': '#e24a5c',
+      'backgroundColor': '#fff',
+      'borderStyle': 'black',
+      'position': 'bottom',
+      'list': [
+        {
+          'pagePath': 'pages/index',
+          'text': '首页',
+          'iconPath': 'public/icon-3-o.png',
+          'selectedIconPath': 'public/icon-3-t.png'
+        },
+        {
+          'pagePath': 'pages/index',
+          'text': '充值',
+          'iconPath': 'public/icon-1-o.png',
+          'selectedIconPath': 'public/icon-1-t.png'
+        },
+        {
+          'pagePath': 'pages/index',
+          'text': '会员',
+          'iconPath': 'public/icon-2-o.png',
+          'selectedIconPath': 'public/icon-2-t.png'
+        }
+      ]
+    },
+    debug: true,
+    networkTimeout: 3000
+  }
+
+  globalData = {
+    userInfo: null
+  }
+
+  onLaunch() {
+   
+  }
+
+ 
+  getUserInfo(cb) {
+    const that = this
+    if (this.globalData.userInfo) {
+      return this.globalData.userInfo
+    }
+    wepy.getUserInfo({
+      success (res) {
+        that.globalData.userInfo = res.userInfo
+        cb && cb(res.userInfo)
+      }
+    })
+  }
+
+}
+</script>
