@@ -1,0 +1,52 @@
+<style lang="less">
+
+</style>
+<template>
+  <view class="lv-user-edit lv-user-p-top">
+    <form bindsubmit="formSubmit" bindreset="formReset"> 
+        <view class="lv-label">
+            <view class="icon iconfont icon-3"></view>
+            <input placeholder-class="input-place" type="digit" placeholder="请输入充值的金额"  value=""/>
+        </view>
+        <button class="lv-submit"  form-type="submit" type="primary">提交</button>
+    </form>    
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+ 
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '充值',
+      disableScroll: true
+    }
+    components = {
+       
+    }
+
+    mixins = []
+
+    data = {
+      usermes: null,
+      loading: true
+    }
+
+    computed = {
+     
+    }
+
+    methods = {
+     
+    }
+
+    events = {
+     
+    }
+
+    onLoad() {
+      
+    }
+  }
+</script>

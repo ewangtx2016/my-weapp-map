@@ -1,7 +1,65 @@
 <style lang="less">
+  @import url('./public/iconfont.less');
   page{
     background: #fff;
   }
+
+  .lv-go{
+    position: relative;
+
+    &::after{
+      content: '';
+      position: absolute;
+      width: 20rpx;
+      height: 20rpx;
+      border-top: 1px solid #333;
+      border-right: 1px solid #333;
+      top: 50%;
+      left: 50%;
+      transform: translate(-10rpx,-10rpx) rotate(45deg);
+    }
+
+
+  }
+
+
+  .lv-label{
+    position: relative;
+    display: flex;
+    padding: 10rpx 10rpx;
+    border: 1px solid #ededed;
+    border-radius: 10rpx;
+    margin-top: 30rpx;
+
+    .icon{
+      width:60rpx;
+      text-align: center;
+      line-height: 80rpx;
+    }
+
+    input{
+      flex: 1;
+      height: 80rpx;
+      color: rgba(0,0,0,0.5);
+    }
+
+  }
+
+  .lv-submit{
+    margin-top: 50rpx;
+  }
+
+  .input-place{
+      font-size: 30rpx;
+  }
+
+
+  .lv-user-p-top{
+    margin-top: 100rpx;
+    padding: 20rpx;
+  }
+
+ 
 </style>
 
 <script>
@@ -11,7 +69,12 @@ import wepy from 'wepy'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/user',
+      'pages/useredit',
+      'pages/recharge',
+      'pages/recharge_list',
+      'pages/consume_list'
     ],
     window: {
       'navigationStyle': 'custom',
@@ -36,13 +99,13 @@ export default class extends wepy.app {
           'selectedIconPath': 'public/icon-3-t.png'
         },
         {
-          'pagePath': 'pages/index',
+          'pagePath': 'pages/recharge',
           'text': '充值',
           'iconPath': 'public/icon-1-o.png',
           'selectedIconPath': 'public/icon-1-t.png'
         },
         {
-          'pagePath': 'pages/index',
+          'pagePath': 'pages/user',
           'text': '会员',
           'iconPath': 'public/icon-2-o.png',
           'selectedIconPath': 'public/icon-2-t.png'
@@ -58,21 +121,42 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-   
+    this.getusermessage()
   }
 
  
-  getUserInfo(cb) {
-    const that = this
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo
-    }
-    wepy.getUserInfo({
-      success (res) {
-        that.globalData.userInfo = res.userInfo
-        cb && cb(res.userInfo)
-      }
-    })
+  getusermessage(fun) {
+   wx.login({
+     success: function(res){
+        // 这里得到code
+     }
+   })
+
+   wx.getSetting({
+     success: function(res){
+       let _this = this
+       let re = res.authSetting
+       if(re['scope.userInfo']){
+         //判断用户是否授权头像权限 true
+         wx.getUserInfo({
+           withCredentials: true,
+           success: function(usemes){
+             _this.globalData = usemes.userInfo
+             fun && fun(usemes.userInfo)
+           }
+         })
+       }else{
+         // false 调取获取授权弹框
+          wx.authorize({
+            scope:'scope.userInfo',
+            success(mess){
+                
+            }
+          })
+       }
+     }
+   })
+
   }
 
 }

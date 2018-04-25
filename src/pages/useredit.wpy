@@ -1,0 +1,64 @@
+<style lang="less">
+
+</style>
+<template>
+  <view class="lv-user-edit lv-user-p-top">
+    <form bindsubmit="formSubmit" bindreset="formReset"> 
+        <view class="lv-label">
+            <view class="icon iconfont icon-ziyuan"></view>
+            <input disabled type="text" value="吕希强"/>
+        </view>
+        <view class="lv-label">
+            <view class="icon iconfont icon-09"></view>
+            <input type="text" value="17600038869"/>
+        </view>
+        <view class="lv-label">
+            <view class="icon iconfont icon-gongsiyouxiang"></view>
+            <input type="text" value="18664698@qq.com"/>
+        </view>
+        <view class="lv-label">
+            <view class="icon iconfont icon-gongsidizhi"></view>
+            <input type="text" value="北京朝阳区soho"/>
+        </view>
+        <button class="lv-submit"  form-type="submit" type="primary">提交</button>
+    </form>    
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+ 
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人资料修改',
+      disableScroll: true
+    }
+    components = {
+       
+    }
+
+    mixins = []
+
+    data = {
+      usermes: null,
+      loading: true
+    }
+
+    computed = {
+     
+    }
+
+    methods = {
+     
+    }
+
+    events = {
+     
+    }
+
+    onLoad() {
+      
+    }
+  }
+</script>

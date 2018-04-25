@@ -15,7 +15,8 @@
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '测试版微信小程序'
+      navigationBarTitleText: '测试版微信小程序',
+      disableScroll: true
     }
     components = {
         map: Map
@@ -41,12 +42,7 @@
 
     onLoad() {
       //获取用户信息
-      let _app = this.$parent
-      let _this = this
-      _app.getUserInfo(function(res){
-          _this.usermes = res
-          _this.$apply()
-      })
+      
     }
   }
 </script>
