@@ -161,13 +161,13 @@
           id: 12,
           latitude: 40.12077,
           longitude: 116.13128,
-          title: '中博教育',
+          title: '加油站',
           iconPath: '../public/icon-mark1.png',
           width: 30,
           height: 30,
-          address: '123123123123123123',
+          address: 'fghfgh',
           callout: {
-            content: '中博教育-加油站',
+            content: '加油站-加油站',
             color: '#fff',
             fontSize: 12,
             padding: 5,
@@ -180,13 +180,13 @@
             id: 13,
             latitude: 23.129163,
             longitude: 113.264435,
-            title: '中博教育',
+            title: '加油站',
             iconPath: '../public/icon-mark1.png',
             width: 30,
             height: 30,
             address: '123123123123123123',
             callout: {
-              content: '中博教育-加油站',
+              content: '加油站-加油站',
               color: '#fff',
               fontSize: 12,
               padding: 5,
@@ -196,62 +196,62 @@
             }
           },
             {
-            id: 14,
-            latitude: 23.159163,
-            longitude: 113.264435,
-            title: '中博教育',
-            iconPath: '../public/icon-mark1.png',
-            width: 30,
-            height: 30,
-            address: '123123123123123123',
-            callout: {
-              content: '中博教育-加油站',
-              color: '#fff',
-              fontSize: 12,
-              padding: 5,
-              borderRadius: 5,
-              bgColor: '#e24a5c',
-              display: 'BYCLICK'
-            }
+              id: 14,
+              latitude: 23.159163,
+              longitude: 113.264435,
+              title: '加油站',
+              iconPath: '../public/icon-mark1.png',
+              width: 30,
+              height: 30,
+              address: 'asdfasdf',
+              callout: {
+                content: '加油站-加油站',
+                color: '#fff',
+                fontSize: 12,
+                padding: 5,
+                borderRadius: 5,
+                bgColor: '#e24a5c',
+                display: 'BYCLICK'
+              }
             },
             {
-            id: 16,
-            latitude: 23.159163,
-            longitude: 113.364435,
-            title: '中博教育',
-            iconPath: '../public/icon-mark1.png',
-            width: 30,
-            height: 30,
-            address: '123123123123123123',
-            callout: {
-              content: '中博教育-加油站',
-              color: '#fff',
-              fontSize: 12,
-              padding: 5,
-              borderRadius: 5,
-              bgColor: '#e24a5c',
-              display: 'BYCLICK'
-            }
+              id: 16,
+              latitude: 23.159163,
+              longitude: 113.364435,
+              title: '加油站',
+              iconPath: '../public/icon-mark1.png',
+              width: 30,
+              height: 30,
+              address: 'rrtyrty',
+              callout: {
+                content: '加油站-加油站',
+                color: '#fff',
+                fontSize: 12,
+                padding: 5,
+                borderRadius: 5,
+                bgColor: '#e24a5c',
+                display: 'BYCLICK'
+              }
             },
             {
-            id: 17,
-            latitude: 23.179163,
-            longitude: 113.264435,
-            title: '中博教育',
-            iconPath: '../public/icon-mark1.png',
-            width: 30,
-            height: 30,
-            address: '123123123123123123',
-            callout: {
-              content: '中博教育-加油站',
-              color: '#fff',
-              fontSize: 12,
-              padding: 5,
-              borderRadius: 5,
-              bgColor: '#e24a5c',
-              display: 'BYCLICK'
-            }
-            }
+              id: 17,
+              latitude: 23.179163,
+              longitude: 113.264435,
+              title: '加油站',
+              iconPath: '../public/icon-mark1.png',
+              width: 30,
+              height: 30,
+              address: 'zzzz',
+              callout: {
+                content: '加油站-加油站',
+                color: '#fff',
+                fontSize: 12,
+                padding: 5,
+                borderRadius: 5,
+                bgColor: '#e24a5c',
+                display: 'BYCLICK'
+              }
+           }
           //latitude: 23.129163, longitude: 113.264435
       ]
     };
@@ -273,19 +273,22 @@
       clickmark(res){
         // 点击mark弹出响应的信息，并赋值当前mark的信息到mark 数据中
         let _this = this
-        _this.getThisMark(res.markerId,function(mk){
-          _this.mark = mk
-          _this.$apply()
-        })
+        let thisId = res.markerId
+        console.log(res.markerId)
+        _this.getThisMark(thisId)
       }
     };
 
   
 
     getThisMark(id,res){
+      let _this = this
       let marks = this.mapmarks
       for(let one of marks){
-        
+        if(one.id == id){
+          console.log(one)
+          _this.mark = one
+        }
       }
     };
 
@@ -297,6 +300,30 @@
         success: function(res){
           _this.mapmes.latitude = _this.circles[0].latitude = res.latitude
           _this.mapmes.longitude = _this.circles[0].longitude = res.longitude
+          for(let i = 0; i< 200; i++){
+            let a = (0.5 - Math.random()) + 40
+            let b = (0.5 - Math.random()) + 116
+            let obj = {
+              id: (17+i),
+              latitude: a,
+              longitude: b,
+              title: '加油站'+i,
+              iconPath: '../public/icon-mark1.png',
+              width: 30,
+              height: 30,
+              address: 'zzzz'+i,
+              callout: {
+                content: '长城-加油站'+i,
+                color: '#fff',
+                fontSize: 12,
+                padding: 5,
+                borderRadius: 5,
+                bgColor: '#e24a5c',
+                display: 'BYCLICK'
+              }
+            }
+            _this.data.mapmarks.push(obj)
+          }
           _this.$apply()
         }
       })
