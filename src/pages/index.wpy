@@ -25,7 +25,8 @@
     mixins = []
 
     data = {
-      usermes: null
+      usermes: null,
+      islogin: false
     }
 
     computed = {
@@ -42,7 +43,24 @@
 
     onLoad() {
       //获取用户信息
-      
+      let _this = this
+      this.$parent.getusermessage(function(res){
+          _this.usermes = res
+          _this.$apply()
+          if(!_this.data.islogin){
+              wx.showModal({
+                title: '未绑定用户',
+                content: '您还未绑定用户，请绑定用户名',
+                success: function(res){
+                    if(res.confirm){
+                      wx.navigateTo({
+                        url: './useredit'
+                      })
+                    }
+                }
+              })
+          }
+      })
     }
   }
 </script>

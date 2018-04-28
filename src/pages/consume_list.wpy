@@ -46,7 +46,7 @@
           </view>
       </view>
        <view class="lv-recharge-o">
-          <view class="left">
+          <view class="left"> 
               <view class="title">微信充值<text>(-100)</text></view>
               <view class="time">2018-04-25 11:54:03</view>
           </view>

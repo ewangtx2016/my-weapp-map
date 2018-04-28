@@ -285,7 +285,7 @@
     getThisMark(id,res){
       let marks = this.mapmarks
       for(let one of marks){
-        one.id == id && res(one)
+        
       }
     };
 
@@ -295,7 +295,6 @@
         type: 'wgs84',
         altitude: true,
         success: function(res){
-          console.log(res)
           _this.mapmes.latitude = _this.circles[0].latitude = res.latitude
           _this.mapmes.longitude = _this.circles[0].longitude = res.longitude
           _this.$apply()

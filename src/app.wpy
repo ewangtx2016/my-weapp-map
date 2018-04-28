@@ -30,6 +30,8 @@
     border: 1px solid #ededed;
     border-radius: 10rpx;
     margin-top: 30rpx;
+    font-size: 32rpx;
+    color: rgba(0,0,0,0.5);
 
     .icon{
       width:60rpx;
@@ -41,12 +43,20 @@
       flex: 1;
       height: 80rpx;
       color: rgba(0,0,0,0.5);
+      padding-left: 10rpx;
     }
 
   }
 
   .lv-submit{
     margin-top: 50rpx;
+    font-size: 40rpx;
+    background-color: #e24a5c;
+
+    &::after{
+      display: none;
+    }
+
   }
 
   .input-place{
@@ -58,6 +68,7 @@
     margin-top: 100rpx;
     padding: 20rpx;
   }
+
 
  
 </style>
@@ -117,45 +128,46 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    islogin: false
   }
 
   onLaunch() {
-    this.getusermessage()
+    
   }
 
  
   getusermessage(fun) {
-   wx.login({
-     success: function(res){
-        // 这里得到code
-     }
-   })
+      let _this = this
+      wx.login({
+        success: function(res){
+            // 这里得到code
+        }
+      })
 
-   wx.getSetting({
-     success: function(res){
-       let _this = this
-       let re = res.authSetting
-       if(re['scope.userInfo']){
-         //判断用户是否授权头像权限 true
-         wx.getUserInfo({
-           withCredentials: true,
-           success: function(usemes){
-             _this.globalData = usemes.userInfo
-             fun && fun(usemes.userInfo)
-           }
-         })
-       }else{
-         // false 调取获取授权弹框
-          wx.authorize({
-            scope:'scope.userInfo',
-            success(mess){
-                
-            }
-          })
-       }
-     }
-   })
+      wx.getSetting({
+        success: function(res){
+          let re = res.authSetting
+          if(re['scope.userInfo']){
+            //判断用户是否授权头像权限 true
+            wx.getUserInfo({
+              withCredentials: true,
+              success: function(usemes){
+                _this.globalData = usemes.userInfo
+                fun && fun(usemes.userInfo)
+              }
+            })
+          }else{
+            // false 调取获取授权弹框
+              wx.authorize({
+                scope:'scope.userInfo',
+                success(mess){
+                    
+                }
+              })
+          }
+        }
+      })
 
   }
 

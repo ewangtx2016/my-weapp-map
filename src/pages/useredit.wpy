@@ -1,26 +1,56 @@
 <style lang="less">
+  .lv-sheng-city{
+    font-size: 32rpx;
+    line-height: 80rpx;
+    padding-left: 10rpx;
+    flex: 1;
+  }
 
+  .che-title{
+    padding-left: 20rpx;
+    padding-right: 10rpx;
+    line-height: 80rpx;
+  }
 </style>
 <template>
   <view class="lv-user-edit lv-user-p-top">
     <form bindsubmit="formSubmit" bindreset="formReset"> 
         <view class="lv-label">
             <view class="icon iconfont icon-ziyuan"></view>
-            <input disabled type="text" value="吕希强"/>
+            <input placeholder="姓名" type="text" value=""/>
         </view>
         <view class="lv-label">
             <view class="icon iconfont icon-09"></view>
-            <input type="text" value="17600038869"/>
+            <input placeholder="电话" type="text" value=""/>
         </view>
         <view class="lv-label">
             <view class="icon iconfont icon-gongsiyouxiang"></view>
-            <input type="text" value="18664698@qq.com"/>
+            <input placeholder="邮箱" type="text" value=""/>
         </view>
+
         <view class="lv-label">
             <view class="icon iconfont icon-gongsidizhi"></view>
-            <input type="text" value="北京朝阳区soho"/>
+            <input  placeholder="地址" type="text" value=""/>
         </view>
-        <button class="lv-submit"  form-type="submit" type="primary">提交</button>
+       
+        <view class="lv-label">
+          <view class="icon iconfont icon-chepaishibieyi"></view>
+          <picker bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="lv-sheng-city" mode='multiSelector' value="{{oneindex}}" range="{{chearray}}">
+            <view class="picker">
+              车牌地区：<text  wx:if="{{oneindex[0] == 1}}">{{chearray[0][oneindex[0]]}}</text><text>{{chearray[1][oneindex[1]]}}</text><text>{{chearray[2][oneindex[2]]}}</text>
+            </view>
+          </picker>
+        </view>
+        <view class="lv-label">
+            <view class="icon iconfont icon-chepai"></view>
+            <view class="che-title" wx:if="{{oneindex[0] == 0}}">
+             {{chearray[1][oneindex[1]]}} {{chearray[2][oneindex[2]]}} · 
+            </view>
+            <input placeholder="请输入车牌号" type="text" value=""/>
+        </view>
+
+         
+        <button class="lv-submit"  form-type="submit" type="primary">绑定</button>
     </form>    
   </view>
 </template>
@@ -42,11 +72,37 @@
 
     data = {
       usermes: null,
-      loading: true
+      loading: true,
+      chearray: [['普通','其他'],['京', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂', '港', '澳', '黑', '吉', '辽', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '浙', '闽', '赣','湘', '鄂', '粤', '琼', '甘', '陕', '贵', '云', '川'],['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']],
+      oneindex: [0,0,0]
+    }
+
+    bindMultiPickerChange(res){
+      this.oneindex = res.detail.value
+      this.$apply()
+    }
+
+    bindMultiPickerColumnChange(res){
+      if(res.detail.column == 0){
+        if(res.detail.value == 1){ 
+            this.data.chearray[1] = ['']
+            this.data.chearray[2] = ['']
+            this.data.oneindex = [0,0,0]
+        }else{
+            this.data.chearray[1] = ['京', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂', '港', '澳', '黑', '吉', '辽', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '浙', '闽', '赣','湘', '鄂', '粤', '琼', '甘', '陕', '贵', '云', '川']
+            this.data.chearray[2] = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+        }
+       this.$apply()
+      }
+       
+    }
+
+
+    formSubmit(res){
     }
 
     computed = {
-     
+      
     }
 
     methods = {
