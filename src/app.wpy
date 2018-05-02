@@ -42,8 +42,12 @@
     input{
       flex: 1;
       height: 80rpx;
-      color: rgba(0,0,0,0.5);
+      color: #000;
       padding-left: 10rpx;
+
+      &:focus{
+        color: #000;
+      }
     }
 
   }
@@ -85,7 +89,10 @@ export default class extends wepy.app {
       'pages/useredit',
       'pages/recharge',
       'pages/recharge_list',
-      'pages/consume_list'
+      'pages/consume_list',
+      'pages/car_list',
+      'pages/car_edit', 
+      'pages/car_add'
     ],
     window: {
       'navigationStyle': 'custom',

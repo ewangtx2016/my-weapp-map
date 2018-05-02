@@ -5,17 +5,17 @@
 </style>
 <template>
   <view class="lv-box">
-    <map></map>
+    <map></map> 
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import Map from '../components/map'
+  import Map from '../components/map' 
 
   export default class Index extends wepy.page {
     config = {
-      navigationBarTitleText: '测试版微信小程序',
+      navigationBarTitleText: '智能加油站',
       disableScroll: true
     }
     components = {

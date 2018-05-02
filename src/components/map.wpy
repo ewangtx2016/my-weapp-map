@@ -274,7 +274,6 @@
         // 点击mark弹出响应的信息，并赋值当前mark的信息到mark 数据中
         let _this = this
         let thisId = res.markerId
-        console.log(res.markerId)
         _this.getThisMark(thisId)
       }
     };
@@ -286,7 +285,6 @@
       let marks = this.mapmarks
       for(let one of marks){
         if(one.id == id){
-          console.log(one)
           _this.mark = one
         }
       }
@@ -295,20 +293,22 @@
     onLoad(){
       let _this = this
       wx.getLocation({
-        type: 'wgs84',
+        type: 'gcj02',
         altitude: true,
         success: function(res){
           _this.mapmes.latitude = _this.circles[0].latitude = res.latitude
           _this.mapmes.longitude = _this.circles[0].longitude = res.longitude
           for(let i = 0; i< 200; i++){
+            let marimg = Math.floor((Math.random()*10))%2 == 0
+            let marimgurl = marimg ? '../public/icon-mark1.png' : '../public/icon-mark1-hover.png'
             let a = (0.5 - Math.random()) + 40
-            let b = (0.5 - Math.random()) + 116
+            let b = (0.5 - Math.random()) + 116 
             let obj = {
               id: (17+i),
               latitude: a,
               longitude: b,
               title: '加油站'+i,
-              iconPath: '../public/icon-mark1.png',
+              iconPath: marimgurl,
               width: 30,
               height: 30,
               address: 'zzzz'+i,

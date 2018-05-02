@@ -177,6 +177,12 @@
           name: '消费记录',
           icon: 'icon-xiaofei',
           tab: false
+        },
+        {
+          path: './car_list',
+          name: '车辆管理',
+          icon: 'icon-chepaishibieyi',
+          tab: false
         }
       ]
     }
