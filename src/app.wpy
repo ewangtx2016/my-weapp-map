@@ -136,11 +136,14 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
-    islogin: false
+    ajaxUrl: 'http://dalv1api.liudi.vip',
+    isOwnUser: false,
+    isOwnUserOpenId: null,
+    isOwnUserMessage: null
   }
 
   onLaunch() {
-    
+     
   }
 
  
@@ -149,6 +152,35 @@ export default class extends wepy.app {
       wx.login({
         success: function(res){
             // 这里得到code
+            if(res.code){
+              wx.request({
+                url: _this.globalData.ajaxUrl,
+                data: {
+                  code: res.code
+                },
+                success: function(response){
+                  _this.globalData.isOwnUserOpenId = response.data.data.openid
+                  wx.setStorageSync('openid', response.data.data.openid)
+                  if(response.data.status == 0){
+                      _this.globalData.isOwnUser = false
+                      wx.showModal({
+                        title: '未绑定用户',
+                        content: '您还未绑定用户，请绑定用户名',
+                        success: function(res){
+                            if(res.confirm){
+                              wx.navigateTo({
+                                url: './useredit'
+                              })
+                            }
+                        }
+                      })
+                  }else{
+                     _this.globalData.isOwnUser = true
+                     _this.globalData.isOwnUserMessage = response.data.data
+                  }                  
+                }
+              })
+            }
         }
       })
 
@@ -160,7 +192,7 @@ export default class extends wepy.app {
             wx.getUserInfo({
               withCredentials: true,
               success: function(usemes){
-                _this.globalData = usemes.userInfo
+                _this.globalData.userInfo = usemes.userInfo
                 fun && fun(usemes.userInfo)
               }
             })

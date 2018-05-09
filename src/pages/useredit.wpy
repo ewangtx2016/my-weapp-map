@@ -1,36 +1,36 @@
 <style lang="less">
-  .lv-sheng-city{
-    font-size: 32rpx;
-    line-height: 80rpx;
-    padding-left: 10rpx;
-    flex: 1;
-  }
+.lv-sheng-city {
+  font-size: 32rpx;
+  line-height: 80rpx;
+  padding-left: 10rpx;
+  flex: 1;
+}
 
-  .che-title{
-    padding-left: 20rpx;
-    padding-right: 10rpx;
-    line-height: 80rpx;
-  }
+.che-title {
+  padding-left: 20rpx;
+  padding-right: 10rpx;
+  line-height: 80rpx;
+}
 </style>
 <template>
   <view class="lv-user-edit lv-user-p-top">
     <form bindsubmit="formSubmit" bindreset="formReset"> 
         <view class="lv-label">
             <view class="icon iconfont icon-ziyuan"></view>
-            <input placeholder="姓名" type="text" value=""/>
+            <input placeholder="姓名" id="nickname" bindinput="valueinput" type="text" value="{{usermessage.nickname}}"/>
         </view>
         <view class="lv-label">
             <view class="icon iconfont icon-09"></view>
-            <input placeholder="电话" type="text" value=""/>
+            <input placeholder="电话" id="mobile" bindinput="valueinput"  type="text" value="{{usermessage.mobile}}"/>
         </view>
         <view class="lv-label">
             <view class="icon iconfont icon-gongsiyouxiang"></view>
-            <input placeholder="邮箱" type="text" value=""/>
+            <input placeholder="邮箱" id="email" bindinput="valueinput"  type="text" value="{{usermessage.email}}"/>
         </view>
 
         <view class="lv-label">
             <view class="icon iconfont icon-gongsidizhi"></view>
-            <input  placeholder="地址" type="text" value=""/>
+            <input  placeholder="地址" id="addr" bindinput="valueinput"  type="text" value="{{usermessage.addr}}"/>
         </view>
          
         <button class="lv-submit"  form-type="submit" type="primary">绑定</button>
@@ -39,43 +39,69 @@
 </template>
 
 <script>
-  import wepy from 'wepy'
- 
+import wepy from 'wepy';
 
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: '个人资料修改',
-      disableScroll: true
-    }
-    components = {
-       
-    }
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人资料修改',
+    disableScroll: true
+  };
+  components = {};
 
-    mixins = []
-
-    data = {
-      usermes: null
-    }
-
-
-    formSubmit(res){
-      
-    }
-
-    computed = {
-      
-    }
-
-    methods = {
-     
-    }
-
-    events = {
-     
-    }
-
-    onLoad() {
-      
+  formSubmit() {
+    let _this = this;
+    let globalData = _this.$parent.globalData;
+    console.log('提交', globalData.ajaxUrl, _this.usermessage);
+    if (globalData.isOwnUserOpenId) {
+      wx.request({
+        url: globalData.ajaxUrl + '/addMember',
+        method: 'POST',
+        data: _this.usermessage,
+        success: function(res) {
+          console.log(res);
+        }
+      });
     }
   }
+
+  valueinput(e) {
+    this.data.usermessage[e.currentTarget.id] = e.detail.value;
+    this.$apply();
+  }
+
+  mixins = [];
+
+  data = {
+    usermessage: {
+      openid: null,
+      nickname: null,
+      mobile: null,
+      email: null,
+      addr: null
+    }
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {
+    let _this = this;
+    let globalData = _this.$parent.globalData;
+    let openid = wx.getStorageSync('openid');
+    if (openid) {
+      wx.request({
+        url: _this.globalData.ajaxUrl,
+        data: {
+          data: res.code
+        },
+        success: function(response) {
+          
+        }
+      });
+    }
+  }
+}
 </script>
