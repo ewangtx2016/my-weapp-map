@@ -97,6 +97,25 @@ export default class Index extends wepy.page {
 
   events = {};
 
-  onLoad() {}
+  onLoad() {
+    let _this = this;
+    let globalData = _this.$parent.globalData;
+    let openid = wx.getStorageSync('openid');
+    if (openid) {
+      wx.request({
+        url: globalData.ajaxUrl + '/getCarList',
+        data: {
+          openid: openid
+        },
+        success: function(response) {
+          console.log(response)
+          if(response.data.status==1){
+            _this.usermessage = response.data.data
+            _this.$apply()
+          }
+        }
+      });
+    }
+  }
 }
 </script>

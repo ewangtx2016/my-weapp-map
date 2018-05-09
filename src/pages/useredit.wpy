@@ -33,7 +33,7 @@
             <input  placeholder="地址" id="addr" bindinput="valueinput"  type="text" value="{{usermessage.addr}}"/>
         </view>
          
-        <button class="lv-submit"  form-type="submit" type="primary">绑定</button>
+        <button class="lv-submit"  form-type="submit" type="primary">确定</button>
     </form>    
   </view>
 </template>
@@ -51,14 +51,15 @@ export default class Index extends wepy.page {
   formSubmit() {
     let _this = this;
     let globalData = _this.$parent.globalData;
-    console.log('提交', globalData.ajaxUrl, _this.usermessage);
     if (globalData.isOwnUserOpenId) {
       wx.request({
         url: globalData.ajaxUrl + '/addMember',
-        method: 'POST',
+        method: 'GET',
         data: _this.usermessage,
         success: function(res) {
-          console.log(res);
+          wx.showToast({
+            title: '成功'
+          })
         }
       });
     }
@@ -93,12 +94,15 @@ export default class Index extends wepy.page {
     let openid = wx.getStorageSync('openid');
     if (openid) {
       wx.request({
-        url: _this.globalData.ajaxUrl,
+        url: globalData.ajaxUrl + '/getUserInfo',
         data: {
-          data: res.code
+          openid: openid
         },
         success: function(response) {
-          
+          if(response.data.status==1){
+            _this.usermessage = response.data.data
+            _this.$apply()
+          }
         }
       });
     }

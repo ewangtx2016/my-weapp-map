@@ -17,7 +17,7 @@
     <form bindsubmit="formSubmit" bindreset="formReset"> 
         <view class="lv-label">
             <view class="icon iconfont icon-ziyuan"></view>
-            <input placeholder="名称" type="text" value=""/>
+            <input placeholder="名称" bindinput="getCarName" type="text" value="{{carmes.name}}"/>
         </view>
        
         <view class="lv-label">
@@ -33,7 +33,7 @@
             <view class="che-title" wx:if="{{oneindex[0] == 0}}">
              {{chearray[1][oneindex[1]]}} {{chearray[2][oneindex[2]]}} · 
             </view>
-            <input placeholder="请输入车牌号" type="text" value=""/>
+            <input placeholder="请输入车牌号" bindinput="getCarNub" type="text" value="{{carnub}}"/>
         </view>
 
          
@@ -61,12 +61,44 @@
       usermes: null,
       loading: true,
       chearray: [['普通','其他'],['京', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂', '港', '澳', '黑', '吉', '辽', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '浙', '闽', '赣','湘', '鄂', '粤', '琼', '甘', '陕', '贵', '云', '川'],['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']],
-      oneindex: [0,0,0]
+      oneindex: [0,0,0],
+      carnub: '',
+      carmes: {
+        openid: '',
+        name: '',
+        num: ''
+      }
+    }
+
+    getCarName(res){
+      let inputVlue = ''
+      if(res){
+        inputVlue = res.detail.value
+        this.carmes.name = inputVlue
+        this.$apply()
+      }
+      console.log(this.carmes)
+    }
+
+    getCarNub(res){
+      let inputVlue = ''
+      if(res){
+        inputVlue = res.detail.value
+        this.carnub = inputVlue
+        this.$apply()
+      }
+      if(this.oneindex[0] == 0){
+        this.carmes.num = this.chearray[1][this.oneindex[1]] + this.chearray[2][this.oneindex[2]] + this.carnub
+      }else{
+        this.carmes.num = this.carnub
+      }
+      console.log(this.carmes.num)
     }
 
     bindMultiPickerChange(res){
       this.oneindex = res.detail.value
       this.$apply()
+      this.getCarNub()
     }
 
     bindMultiPickerColumnChange(res){
@@ -81,11 +113,28 @@
         }
        this.$apply()
       }
-       
+      this.getCarNub()  
     }
 
 
     formSubmit(res){
+      let _this = this;
+      let globalData = _this.$parent.globalData;
+      let openid = wx.getStorageSync('openid');
+      if (openid) {
+        console.log(_this.carmes)
+        wx.request({
+          url: globalData.ajaxUrl + '/addCar',
+          method: 'POST',
+          data: _this.carmes,
+          success: function(response) {
+            console.log(response)
+            if(response.data.status==1){
+             
+            }
+          }
+        });
+      }
     }
 
     computed = {
@@ -101,7 +150,9 @@
     }
 
     onLoad() {
-      
+      let openid = wx.getStorageSync('openid')
+      this.carmes.openid = openid
+      this.$apply()
     }
   }
 </script>
