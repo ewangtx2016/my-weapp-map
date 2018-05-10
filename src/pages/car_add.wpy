@@ -122,15 +122,29 @@
       let globalData = _this.$parent.globalData;
       let openid = wx.getStorageSync('openid');
       if (openid) {
-        console.log(_this.carmes)
         wx.request({
           url: globalData.ajaxUrl + '/addCar',
-          method: 'POST',
+          method: 'GET',
           data: _this.carmes,
           success: function(response) {
             console.log(response)
             if(response.data.status==1){
-             
+              wx.showToast({
+                title: '添加车辆成功',
+                complete: function(){
+                   setTimeout(() => {
+                       wx.navigateTo({
+                        url: './car_list'
+                      })     
+                   }, 1000);
+                }
+              })
+              
+            }else{
+              wx.showToast({
+                title: response.data.msg,
+                icon: 'none'
+              })
             }
           }
         });

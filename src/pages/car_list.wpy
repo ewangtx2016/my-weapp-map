@@ -104,6 +104,7 @@ export default class Index extends wepy.page {
     if (openid) {
       wx.request({
         url: globalData.ajaxUrl + '/getCarList',
+        method: 'GET',
         data: {
           openid: openid
         },
