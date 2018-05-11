@@ -47,24 +47,17 @@
 </style>
 <template>
   <view class="lv-recharge-list lv-user-p-top">
-       <navigator open-type="navigate" url="./car_edit">
+     <block wx:for="{{carlist}}" wx:key="{{item}}">
+       <navigator open-type="navigate" url="./car_edit?car_id={{item.id}}">
         <view class="lv-recharge-o">
                 <view class="left">
-                    <view class="title">车辆1</view>
-                    <view class="car-nub"><text>京N00CK5</text></view>
+                    <view class="title">{{item.name}}</view>
+                    <view class="car-nub"><text>{{item.num}}</text></view>
                 </view>
                 <view class="lv-carlist-go lv-go"></view>
         </view>
        </navigator>
-       <navigator open-type="navigate" url="./car_edit">
-        <view class="lv-recharge-o">
-                <view class="left">
-                    <view class="title">车辆1</view>
-                    <view class="car-nub"><text>京N00CK5</text></view>
-                </view>
-                <view class="lv-carlist-go lv-go"></view>
-        </view>
-       </navigator>
+       </block>
 
        <view class="car-add">
            <navigator open-type="navigate" url="./car_add">
@@ -88,7 +81,8 @@ export default class Index extends wepy.page {
 
   data = {
     usermes: null,
-    loading: true
+    loading: true,
+    carlist: []
   };
 
   computed = {};
@@ -109,9 +103,8 @@ export default class Index extends wepy.page {
           openid: openid
         },
         success: function(response) {
-          console.log(response)
           if(response.data.status==1){
-            _this.usermessage = response.data.data
+            _this.carlist = response.data.data
             _this.$apply()
           }
         }

@@ -124,7 +124,6 @@
       if (openid) {
         wx.request({
           url: globalData.ajaxUrl + '/addCar',
-          method: 'GET',
           data: _this.carmes,
           success: function(response) {
             console.log(response)

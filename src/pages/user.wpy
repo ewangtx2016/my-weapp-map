@@ -204,6 +204,7 @@
       this.$parent.getusermessage(function(res){
           _this.usermes = res
           _this.$apply()
+          console.log(_this.usermes)
       })
     };
 
