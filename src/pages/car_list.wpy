@@ -44,20 +44,32 @@
 .lv-carlist-go {
   width: 30rpx;
 }
+
+.lv-scroll-view{
+  height: 100vh;
+}
+
+.car-add{
+  margin: 20rpx 0;
+}
+
 </style>
 <template>
+<scroll-view class="lv-scroll-view" scroll-y="true">
   <view class="lv-recharge-list lv-user-p-top">
-     <block wx:for="{{carlist}}" wx:key="{{item}}">
-       <navigator open-type="navigate" url="./car_edit?car_id={{item.id}}">
-        <view class="lv-recharge-o">
-                <view class="left">
-                    <view class="title">{{item.name}}</view>
-                    <view class="car-nub"><text>{{item.num}}</text></view>
-                </view>
-                <view class="lv-carlist-go lv-go"></view>
-        </view>
-       </navigator>
-       </block>
+    
+      <block wx:for="{{carlist}}" wx:key="{{item}}">
+        <navigator open-type="navigate" url="./car_edit?car_id={{item.id}}">
+          <view class="lv-recharge-o">
+                  <view class="left">
+                      <view class="title">{{item.name}}</view>
+                      <view class="car-nub"><text>{{item.num}}</text></view>
+                  </view>
+                  <view class="lv-carlist-go lv-go"></view>
+          </view>
+        </navigator>
+        </block>
+     
 
        <view class="car-add">
            <navigator open-type="navigate" url="./car_add">
@@ -65,6 +77,7 @@
            </navigator>
        </view>
   </view>
+   </scroll-view>
 </template>
 
 <script>

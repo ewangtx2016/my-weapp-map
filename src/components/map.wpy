@@ -119,6 +119,8 @@
 
  
     data = {
+      //半径，以千米为单位
+      banjing: 10,
       mapmes: {
           longitude: null,
           latitude: null,
@@ -132,128 +134,12 @@
           longitude: null,
           color: '#e24a5c44',
           fillColor: '#e24a5c22',
-          radius: 10000,
+          radius: 10 * (1000),
           strokeWidth: 10
         }
       ],
       mark: null,
-      mapmarks: [
-        {
-          id: 1,
-          latitude: 40.22077,
-          longitude: 116.23128,
-          title: '祁家豁子',
-          iconPath: '../public/icon-mark1.png',
-          width: 30,
-          height: 30,
-          address: '长途汽车站的描述性文字长途汽车站的描述性文字长途汽车站的描述性文字长途汽车站的描述性文字',
-          callout: {
-            content: '祁家豁子-加油站',
-            color: '#fff',
-            fontSize: 12,
-            padding: 5,
-            borderRadius: 5,
-            bgColor: '#e24a5c',
-            display: 'BYCLICK'
-          }
-        },
-        {
-          id: 12,
-          latitude: 40.12077,
-          longitude: 116.13128,
-          title: '加油站',
-          iconPath: '../public/icon-mark1.png',
-          width: 30,
-          height: 30,
-          address: 'fghfgh',
-          callout: {
-            content: '加油站-加油站',
-            color: '#fff',
-            fontSize: 12,
-            padding: 5,
-            borderRadius: 5,
-            bgColor: '#e24a5c',
-            display: 'BYCLICK'
-          }
-        },
-          {
-            id: 13,
-            latitude: 23.129163,
-            longitude: 113.264435,
-            title: '加油站',
-            iconPath: '../public/icon-mark1.png',
-            width: 30,
-            height: 30,
-            address: '123123123123123123',
-            callout: {
-              content: '加油站-加油站',
-              color: '#fff',
-              fontSize: 12,
-              padding: 5,
-              borderRadius: 5,
-              bgColor: '#e24a5c',
-              display: 'BYCLICK'
-            }
-          },
-            {
-              id: 14,
-              latitude: 23.159163,
-              longitude: 113.264435,
-              title: '加油站',
-              iconPath: '../public/icon-mark1.png',
-              width: 30,
-              height: 30,
-              address: 'asdfasdf',
-              callout: {
-                content: '加油站-加油站',
-                color: '#fff',
-                fontSize: 12,
-                padding: 5,
-                borderRadius: 5,
-                bgColor: '#e24a5c',
-                display: 'BYCLICK'
-              }
-            },
-            {
-              id: 16,
-              latitude: 23.159163,
-              longitude: 113.364435,
-              title: '加油站',
-              iconPath: '../public/icon-mark1.png',
-              width: 30,
-              height: 30,
-              address: 'rrtyrty',
-              callout: {
-                content: '加油站-加油站',
-                color: '#fff',
-                fontSize: 12,
-                padding: 5,
-                borderRadius: 5,
-                bgColor: '#e24a5c',
-                display: 'BYCLICK'
-              }
-            },
-            {
-              id: 17,
-              latitude: 23.179163,
-              longitude: 113.264435,
-              title: '加油站',
-              iconPath: '../public/icon-mark1.png',
-              width: 30,
-              height: 30,
-              address: 'zzzz',
-              callout: {
-                content: '加油站-加油站',
-                color: '#fff',
-                fontSize: 12,
-                padding: 5,
-                borderRadius: 5,
-                bgColor: '#e24a5c',
-                display: 'BYCLICK'
-              }
-           }
-          //latitude: 23.129163, longitude: 113.264435
-      ]
+      mapmarks: []
     };
 
     methods = {
@@ -292,39 +178,57 @@
 
     onLoad(){
       let _this = this
+      let globalData = _this.$parent.$parent.globalData
+      let openid = wx.getStorageSync('openid')
       wx.getLocation({
         type: 'gcj02',
         altitude: true,
         success: function(res){
+          //获取定位，并设置坐标中心，以及圆形浮层
           _this.mapmes.latitude = _this.circles[0].latitude = res.latitude
           _this.mapmes.longitude = _this.circles[0].longitude = res.longitude
-          for(let i = 0; i< 200; i++){
-            let marimg = Math.floor((Math.random()*10))%2 == 0
-            let marimgurl = marimg ? '../public/icon-mark1.png' : '../public/icon-mark1-hover.png'
-            let a = (0.5 - Math.random()) + 40
-            let b = (0.5 - Math.random()) + 116 
-            let obj = {
-              id: (17+i),
-              latitude: a,
-              longitude: b,
-              title: '加油站'+i,
-              iconPath: marimgurl,
-              width: 30,
-              height: 30,
-              address: 'zzzz'+i,
-              callout: {
-                content: '长城-加油站'+i,
-                color: '#fff',
-                fontSize: 12,
-                padding: 5,
-                borderRadius: 5,
-                bgColor: '#e24a5c',
-                display: 'BYCLICK'
+           
+          //请求获取定位坐标周边的加油站数据
+          wx.request({
+            url: globalData.ajaxUrl + '/getNearbyStationList',
+            data: {
+              longitude: res.longitude,
+              latitude: res.latitude,
+              range: _this.banjing
+            },
+            success: (res)=>{
+              let marimgurlno = '../public/icon-mark1.png' 
+              let marimgurlyes = '../public/icon-mark1-hover.png' 
+              if(res.data.status == 1){
+                  for(let one of res.data.data){
+                     let obj = {
+                        id: one.id,
+                        latitude: one.latitude,
+                        longitude: one.longitude,
+                        title: one.name,
+                        iconPath: one.is_lpr == 1 ? marimgurlyes : marimgurlno,
+                        width: 30,
+                        height: 30,
+                        address: one.name,
+                        callout: {
+                          content: one.name,
+                          color: '#fff',
+                          fontSize: 12,
+                          padding: 5,
+                          borderRadius: 5,
+                          bgColor: '#e24a5c',
+                          display: 'BYCLICK'
+                        }
+                      }
+                    _this.data.mapmarks.push(obj)
+                  }
+                   _this.$apply()
               }
             }
-            _this.data.mapmarks.push(obj)
-          }
-          _this.$apply()
+
+          })
+
+         
         }
       })
     }
