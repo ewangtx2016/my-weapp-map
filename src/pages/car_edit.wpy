@@ -17,14 +17,14 @@
     <form bindsubmit="formSubmit" bindreset="formReset"> 
         <view class="lv-label">
             <view class="icon iconfont icon-ziyuan"></view>
-            <input placeholder="名称" type="text" value="{{carmessage.name}}"/>
+            <input placeholder="名称" bindinput="getCarName" type="text" value="{{carmes.name}}"/>
         </view>
        
         <view class="lv-label">
           <view class="icon iconfont icon-chepaishibieyi"></view>
           <picker bindchange="bindMultiPickerChange" bindcolumnchange="bindMultiPickerColumnChange" class="lv-sheng-city" mode='multiSelector' value="{{oneindex}}" range="{{chearray}}">
             <view class="picker">
-              车牌地区：<text  wx:if="{{oneindex[0] == 1}}">{{chearray[0][oneindex[0]]}}</text><block   wx:if="{{oneindex[0] == 0}}"><text>{{chearray[1][oneindex[1]]}}</text><text>{{chearray[2][oneindex[2]]}}</text></block>
+              车牌地区：<text  wx:if="{{oneindex[0] == 1}}">{{chearray[0][oneindex[0]]}}</text><text>{{chearray[1][oneindex[1]]}}</text><text>{{chearray[2][oneindex[2]]}}</text>
             </view>
           </picker>
         </view>
@@ -33,11 +33,12 @@
             <view class="che-title" wx:if="{{oneindex[0] == 0}}">
              {{chearray[1][oneindex[1]]}} {{chearray[2][oneindex[2]]}} · 
             </view>
-            <input placeholder="请输入车牌号" type="text" value="{{carmessage.num}}"/>
+            <input placeholder="请输入车牌号" bindinput="getCarNub" type="text" value="{{carnub}}"/>
         </view>
 
          
         <button class="lv-submit"  form-type="submit" type="primary">修改</button>
+        <button @tap="reset" class="lv-submit"  type="default">取消</button>
     </form>    
   </view>
 </template>
@@ -60,21 +61,53 @@
     data = {
       usermes: null,
       loading: true,
-      chearray: [['普通','其他'],[],[]],
-      oneindex: [1,0,13],
-      carmessage: null
+      chearray: [['普通','其他'],['京', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂', '港', '澳', '黑', '吉', '辽', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '浙', '闽', '赣','湘', '鄂', '粤', '琼', '甘', '陕', '贵', '云', '川'],['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']],
+      oneindex: [0,0,0],
+      carnub: '',
+      carmes: {
+        openid: '',
+        car_id: '',
+        name: '',
+        num: ''
+      }
+    }
+
+    getCarName(res){
+      let inputVlue = ''
+      if(res){
+        inputVlue = res.detail.value
+        this.carmes.name = inputVlue
+        this.$apply()
+      }
+    }
+
+    getCarNub(res){
+      let inputVlue = ''
+      if(res){
+        inputVlue = res.detail.value.substring(0,5)
+        this.carnub = inputVlue
+        this.$apply()
+      }
+      if(this.oneindex[0] == 0){
+        this.carmes.num = this.chearray[1][this.oneindex[1]] + this.chearray[2][this.oneindex[2]] + this.carnub
+      }else{
+        this.carmes.num = this.carnub
+      }
+      
+      this.$apply()
     }
 
     bindMultiPickerChange(res){
       this.oneindex = res.detail.value
       this.$apply()
+      this.getCarNub()
     }
 
     bindMultiPickerColumnChange(res){
       if(res.detail.column == 0){
         if(res.detail.value == 1){ 
-            this.data.chearray[1] = []
-            this.data.chearray[2] = []
+            this.data.chearray[1] = ['']
+            this.data.chearray[2] = ['']
             this.data.oneindex = [0,0,0]
         }else{
             this.data.chearray[1] = ['京', '津', '沪', '渝', '蒙', '新', '藏', '宁', '桂', '港', '澳', '黑', '吉', '辽', '晋', '冀', '青', '鲁', '豫', '苏', '皖', '浙', '闽', '赣','湘', '鄂', '粤', '琼', '甘', '陕', '贵', '云', '川']
@@ -82,7 +115,7 @@
         }
        this.$apply()
       }
-       
+      this.getCarNub()  
     }
 
 
@@ -90,17 +123,15 @@
       let _this = this;
       let globalData = _this.$parent.globalData;
       let openid = wx.getStorageSync('openid');
-      let cardata = {
-        openid: openid,
-        car_id: _this.carmessage.id,
-        num: _this.carmessage.num,
-        name: _this.carmessage.name
-      }
-      
       if (openid) {
         wx.request({
           url: globalData.ajaxUrl + '/addCar',
-          data: cardata,
+          data: {
+            name: _this.carmes.name,
+            openid: _this.carmes.openid,
+            car_id: _this.carmes.car_id,
+            num: _this.carmes.num
+          },
           success: function(response) {
             if(response.data.status==1){
               wx.showToast({
@@ -130,7 +161,13 @@
     }
 
     methods = {
-     
+        reset(){
+           setTimeout(() => {
+                wx.navigateTo({
+                url: './car_list'
+              })     
+            }, 200);
+        }
     }
 
     events = {
@@ -138,26 +175,43 @@
     }
 
     onLoad(res) {
-      let _this = this
-      let globalData = _this.$parent.globalData
-      let openid = wx.getStorageSync('openid')
-      let car_id = res.car_id
-      if(openid && car_id){
-        wx.request({
-          url: globalData.ajaxUrl + '/getCarInfo',
-          method: 'GET',
-          data: {
-            openid: openid,
-            car_id: car_id
-          },
-          success: (response) => {
-            if(response.data.staus == 1){
-              _this.carmessage = response.data.data
-              _this.$apply()
-            }
+          let _this = this
+          let globalData = _this.$parent.globalData
+          let openid = wx.getStorageSync('openid')
+          let car_id = res.car_id
+          this.carmes.car_id = res.car_id
+          this.carmes.openid = openid
+          this.$apply()
+
+          if(openid && car_id){
+            wx.request({
+              url: globalData.ajaxUrl + '/getCarInfo',
+              method: 'GET',
+              data: {
+                openid: openid,
+                car_id: car_id
+              },
+              success: (response) => {
+                if(response.data.staus == 1){
+                  let name = response.data.data.num.substring(0,1)
+                  let nameKey = _this.chearray[1].indexOf(name)
+
+                  let tag = response.data.data.num.substring(1,2)
+                  let tagKey = _this.chearray[2].indexOf(tag) 
+
+                  let number = response.data.data.num.substring(2,response.data.data.num.length)
+                  
+                  _this.carmes.num = response.data.data.num
+                  _this.carnub = number
+                  _this.carmes.name = response.data.data.name
+                  _this.oneindex = [0, nameKey, tagKey]
+                  
+                  _this.$apply()
+                }
+              }
+            })
           }
-        })
-      }
+
     }
   }
 </script>

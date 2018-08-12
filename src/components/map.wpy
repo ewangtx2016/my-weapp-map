@@ -197,6 +197,7 @@
               range: _this.banjing
             },
             success: (res)=>{
+              console.log(res)
               let marimgurlno = '../public/icon-mark1.png' 
               let marimgurlyes = '../public/icon-mark1-hover.png' 
               if(res.data.status == 1){

@@ -57,9 +57,21 @@ export default class Index extends wepy.page {
         method: 'GET',
         data: _this.usermessage,
         success: function(res) {
-          wx.showToast({
-            title: '成功'
-          })
+            if(res.data.status == 1){
+                wx.showToast({
+                  title: '成功'
+                })
+                setTimeout(() => {
+                    wx.switchTab({
+                      url: 'user'
+                    })
+                }, 1000);
+            }else{
+                wx.showToast({
+                  title: res.data.msg,
+                  icon:'none'
+                })
+            }
         }
       });
     }
@@ -74,7 +86,7 @@ export default class Index extends wepy.page {
 
   data = {
     usermessage: {
-      openid: null,
+      openid: wx.getStorageSync('openid'),
       nickname: null,
       mobile: null,
       email: null,

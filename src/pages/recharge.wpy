@@ -6,7 +6,7 @@
     <form bindsubmit="formSubmit" bindreset="formReset"> 
         <view class="lv-label">
             <view class="icon iconfont icon-3"></view>
-            <input placeholder-class="input-place" type="digit" placeholder="请输入充值的金额"  value=""/>
+            <input placeholder-class="input-place" type="digit" @input="moneyAdd" placeholder="请输入充值的金额"  value=""/>
         </view>
         <button class="lv-submit"  form-type="submit" type="primary">提交</button>
     </form>    
@@ -29,8 +29,9 @@
     mixins = []
 
     data = {
-      usermes: null,
-      loading: true
+       money: 0,
+       minMoney: 10,
+       maxMoney: 1000
     }
 
     computed = {
@@ -38,7 +39,36 @@
     }
 
     methods = {
-     
+        moneyAdd(res){
+            this.money = res.detail.value
+            this.$apply()
+        }
+    }
+
+    formSubmit(){
+            let _this = this;
+            let globalData = _this.$parent.globalData;
+            let openid = wx.getStorageSync('openid');
+            if(_this.money < _this.minMoney || _this.money > _this.maxMoney){
+                wx.showToast({
+                  title: `充值金额必须在￥${_this.minMoney}至￥${_this.maxMoney}之间`,
+                  icon: 'none'
+                })
+            }else{
+                if (openid) {
+                  wx.request({
+                    url: globalData.ajaxUrl + '/prepay',
+                    method: 'POST',
+                    data: {
+                      openid: openid,
+                      money: _this.money
+                    },
+                    success: function(response) {
+                      console.log(response)
+                    }
+                  });
+                }
+            }
     }
 
     events = {
@@ -46,7 +76,10 @@
     }
 
     onLoad() {
-      
+          
     }
+
+
+
   }
 </script>
