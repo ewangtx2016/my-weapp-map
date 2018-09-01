@@ -136,7 +136,7 @@ export default class extends wepy.app {
 
   globalData = {
     userInfo: null,
-    ajaxUrl: 'http://dalv1api.liudi.vip',
+    ajaxUrl: 'https://dalv1api.liudi.vip',
     isOwnUser: false,
     isOwnUserOpenId: null,
     isOwnUserMessage: null
@@ -197,13 +197,7 @@ export default class extends wepy.app {
               }
             })
           }else{
-            // false 调取获取授权弹框
-              wx.authorize({
-                scope:'scope.userInfo',
-                success(mess){
-                    
-                }
-              })
+            
           }
         }
       })

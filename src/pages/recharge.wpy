@@ -58,17 +58,41 @@
                 if (openid) {
                   wx.request({
                     url: globalData.ajaxUrl + '/prepay',
-                    method: 'POST',
+                    method: 'GET',
                     data: {
                       openid: openid,
                       money: _this.money
                     },
                     success: function(response) {
-                      console.log(response)
+                        let payData = response.data
+                        payData.nonceStr = _this.randomString(10)
+                        payData.timeStamp = `${payData.timeStamp}`
+
+                        console.log(payData)
+                        // 调用支付接口
+                        wx.requestPayment({
+                          ...payData,
+                          'success':(data)=>{
+                            console.log(data)
+                          }
+                        })
                     }
                   });
                 }
             }
+    }
+
+
+    // 随机数 32位随机数
+    randomString(len){
+      let leng = len || 32
+      let str = `AABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678`
+      let strLen = str.length
+      let newStr = ''
+      for(let one = 0; one < leng; one++){
+        newStr += str.charAt(Math.floor(Math.random() * strLen))
+      }
+      return newStr
     }
 
     events = {

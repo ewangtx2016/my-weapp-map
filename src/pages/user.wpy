@@ -101,6 +101,15 @@
      width: 50rpx;
    }
  }
+
+ .btn-getuser{
+   background: transparent;
+   border: none;
+ }
+
+ .btn-getuser::after, .btn-getuser::before{
+   display: none;
+ }
  
 </style>
 <template> 
@@ -109,7 +118,9 @@
       <image class="lv-use-head-bg" mode="aspectFill" src="../public/banner-img.jpg"></image>
       <view class="use-img">
         <view class="img">
-          <image mode="aspectFill" src="{{usermes.avatarUrl}}"></image>
+            <button class="btn-getuser" open-type="getUserInfo">
+              <image mode="aspectFill" src="{{usermes.avatarUrl}}"></image>
+            </button>
         </view>
         <view class="name">
           {{usermes.nickName}}
