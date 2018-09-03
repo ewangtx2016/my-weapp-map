@@ -1,5 +1,5 @@
 {
-	"description": "one project",
+	"description": "加油站",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
@@ -8,8 +8,8 @@
 		"newFeature": true
 	},
 	"compileType": "miniprogram",
-	"appid": "wx67906ead9ba61a52",
-	"projectname": "project",
+	"appid": "wxd1ed0f315903dd6e",
+	"projectname": "加油站",
 	"miniprogramRoot": "./dist",
 	"condition": {
 		"search": {

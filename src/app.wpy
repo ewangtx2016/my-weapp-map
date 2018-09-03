@@ -183,25 +183,6 @@ export default class extends wepy.app {
             }
         }
       })
-
-      wx.getSetting({
-        success: function(res){
-          let re = res.authSetting
-          if(re['scope.userInfo']){
-            //判断用户是否授权头像权限 true
-            wx.getUserInfo({
-              withCredentials: true,
-              success: function(usemes){
-                _this.globalData.userInfo = usemes.userInfo
-                fun && fun(usemes.userInfo)
-              }
-            })
-          }else{
-            
-          }
-        }
-      })
-
   }
 
 }

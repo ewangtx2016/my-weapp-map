@@ -33,7 +33,7 @@
             <input  placeholder="地址" id="addr" bindinput="valueinput"  type="text" value="{{usermessage.addr}}"/>
         </view>
          
-        <button class="lv-submit"  form-type="submit" type="primary">确定</button>
+        <button class="lv-submit" bindgetuserinfo="onGotUserInfo" open-type="getUserInfo"  form-type="submit" type="primary">确定</button>
     </form>    
   </view>
 </template>
@@ -48,6 +48,15 @@ export default class Index extends wepy.page {
   };
   components = {};
 
+  // 获取用户信息并绑定cookie
+  onGotUserInfo(e) {
+    let _this = this
+    _this.$parent.getusermessage(()=>{
+       _this.formSubmit()
+    })
+  }
+
+  // 提交会员信息数据
   formSubmit() {
     let _this = this;
     let globalData = _this.$parent.globalData;
